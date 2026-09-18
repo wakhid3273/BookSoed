@@ -24,7 +24,33 @@ class Book extends Model
     ];
 
     /**
-     * Get the seller (user) who owns the book listing.
+     * Daftar kondisi buku yang valid.
+     */
+    public static function conditions(): array
+    {
+        return [
+            'NEW'      => 'Baru',
+            'LIKE_NEW' => 'Seperti Baru',
+            'GOOD'     => 'Baik',
+            'FAIR'     => 'Cukup',
+            'POOR'     => 'Kurang',
+        ];
+    }
+
+    /**
+     * Daftar status listing yang valid.
+     */
+    public static function statuses(): array
+    {
+        return [
+            'AVAILABLE' => 'Tersedia',
+            'RESERVED'  => 'Dipesan',
+            'SOLD'      => 'Terjual',
+        ];
+    }
+
+    /**
+     * Get the seller (user) who owns this book listing.
      */
     public function seller(): BelongsTo
     {
@@ -32,7 +58,7 @@ class Book extends Model
     }
 
     /**
-     * Get the category of the book.
+     * Get the category of this book.
      */
     public function category(): BelongsTo
     {
@@ -41,6 +67,7 @@ class Book extends Model
 
     /**
      * Get the order items where this book is listed.
+     * Used by BookPolicy to prevent deletion of books with transaction history.
      */
     public function orderItems(): HasMany
     {
