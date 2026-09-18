@@ -66,7 +66,7 @@
                     <form action="{{ route('seller.orders.process', $order) }}" method="POST">
                         @csrf
                         <button type="submit"
-                                class="px-5 py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs rounded-xl shadow-xs transition duration-150">
+                                class="btn-primary">
                             ✓ Proses Pesanan Ini
                         </button>
                     </form>

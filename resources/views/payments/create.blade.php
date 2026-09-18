@@ -1,16 +1,17 @@
 <x-app-layout>
     <div class="py-8">
-        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-2xl border border-warm-200 shadow-xs p-6 sm:p-8 space-y-6">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
+
+            {{-- Back button clearly visible at top --}}
+            <x-back-button :href="route('orders.show', $order)" label="← Kembali ke Detail Order" />
+
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-sm p-6 sm:p-8 space-y-6">
 
                 {{-- Detail Ringkas Order --}}
                 <div class="border-b border-warm-200 pb-4">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-xs font-mono text-warm-500">Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
-                            <h1 class="font-serif text-2xl font-bold text-warm-900 mt-0.5">Pilih Metode Pembayaran</h1>
-                        </div>
-                        <x-back-button :href="route('orders.show', $order)" label="Batal" />
+                    <div>
+                        <span class="text-xs font-mono text-warm-500">Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
+                        <h1 class="font-serif text-2xl font-bold text-warm-900 mt-0.5">Pilih Metode Pembayaran</h1>
                     </div>
                     
                     <div class="mt-4 p-4 bg-warm-50 rounded-xl border border-warm-200 flex justify-between items-center">
@@ -77,11 +78,12 @@
                     </div>
 
                     <div class="flex justify-end gap-3 pt-4 border-t border-warm-200">
-                        <a href="{{ route('orders.show', $order) }}" class="px-4 py-2.5 border border-warm-200 text-warm-700 text-xs font-semibold rounded-xl hover:bg-warm-100 transition">
+                        <a href="{{ route('orders.show', $order) }}"
+                           class="px-4 py-2.5 border border-warm-200 text-warm-700 text-sm font-semibold rounded-xl hover:bg-warm-100 hover:-translate-y-0.5 transition-all duration-200">
                             Batal
                         </a>
-                        <button type="submit" class="px-6 py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs rounded-xl shadow-xs transition duration-150">
-                            Konfirmasi Pembayaran →
+                        <button type="submit" class="btn-sm-primary text-sm px-6 py-2.5">
+                            💳 Konfirmasi Pembayaran →
                         </button>
                     </div>
                 </form>

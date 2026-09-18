@@ -3,7 +3,7 @@
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             <div class="flex items-center justify-between">
-                <x-back-button :href="route('orders.show', $payment->order)" label="Kembali ke Detail Order" />
+                <x-back-button :href="route('orders.show', $payment->order)" label="← Kembali ke Detail Order" />
                 <span class="text-xs font-mono text-warm-500">ID Pembayaran: #{{ str_pad($payment->id, 5, '0', STR_PAD_LEFT) }}</span>
             </div>
 
@@ -108,8 +108,7 @@
             @if ($payment->isFailed() && auth()->id() === $payment->order->buyer_id)
                 <div class="bg-white rounded-2xl border border-warm-200 p-6 text-center space-y-3">
                     <p class="text-xs text-warm-600">Pembayaran E-Wallet sebelumnya gagal. Kamu dapat mengulang pembayaran.</p>
-                    <a href="{{ route('payments.create', $payment->order) }}"
-                       class="inline-block px-5 py-2.5 bg-brand-700 hover:bg-brand-800 text-white text-xs font-semibold rounded-xl transition">
+                    <a href="{{ route('payments.create', $payment->order) }}" class="btn-sm-primary text-xs px-5 py-2.5">
                         🔄 Coba Bayar Lagi
                     </a>
                 </div>

@@ -28,7 +28,7 @@
         @endisset
 
         <!-- Main Content -->
-        <main class="flex-grow">
+        <main class="flex-grow page-enter">
             {{ $slot }}
         </main>
 

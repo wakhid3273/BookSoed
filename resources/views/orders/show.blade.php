@@ -4,7 +4,7 @@
 
             {{-- Breadcrumb & Back --}}
             <div class="flex items-center justify-between">
-                <x-back-button :href="route('orders.index')" label="Kembali ke Order Saya" />
+                <x-back-button :href="route('orders.index')" label="← Kembali ke Order Saya" />
                 <span class="text-xs font-mono text-warm-500">Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
             </div>
 
@@ -96,12 +96,11 @@
 
                     @if ($order->payment)
                         <a href="{{ route('payments.show', $order->payment) }}"
-                           class="px-4 py-2 bg-warm-100 hover:bg-warm-200 text-warm-800 text-xs font-semibold rounded-xl transition">
+                           class="px-4 py-2 bg-warm-100 hover:bg-warm-200 text-warm-800 text-xs font-semibold rounded-xl transition-all duration-200 hover:-translate-y-0.5">
                             Lihat Pembayaran →
                         </a>
                     @elseif (auth()->id() === $order->buyer_id && $order->status !== 'CANCELLED')
-                        <a href="{{ route('payments.create', $order) }}"
-                           class="px-5 py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs rounded-xl shadow-xs transition duration-150">
+                        <a href="{{ route('payments.create', $order) }}" class="btn-sm-primary text-xs px-5 py-2.5">
                             💳 Bayar Sekarang
                         </a>
                     @endif

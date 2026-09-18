@@ -4,20 +4,20 @@
 
             {{-- Navigation Back & Breadcrumb --}}
             <div class="flex items-center gap-3">
-                <x-back-button :href="route('books.index')" label="Kembali ke Marketplace" />
-                <span class="text-warm-300">|</span>
-                <span class="text-xs text-warm-900 font-medium truncate max-w-xs">{{ $book->title }}</span>
+                <x-back-button :href="route('books.index')" label="← Kembali ke Marketplace" />
+                <span class="text-warm-300 select-none">·</span>
+                <span class="text-xs text-warm-700 font-medium truncate max-w-xs">{{ $book->title }}</span>
             </div>
 
-            <div class="bg-white rounded-2xl border border-warm-200 shadow-xs overflow-hidden">
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-sm overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-12">
 
                     {{-- Left Image Panel --}}
-                    <div class="md:col-span-5 bg-warm-100 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-warm-200 min-h-[320px]">
+                    <div class="md:col-span-5 bg-warm-100 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-warm-200 min-h-[320px] overflow-hidden group">
                         @if ($book->photo_path)
                             <img src="{{ Storage::url($book->photo_path) }}"
                                  alt="{{ $book->title }}"
-                                 class="max-h-80 w-auto object-contain rounded-xl shadow-md">
+                                 class="max-h-80 w-auto object-contain rounded-xl shadow-md transition-transform duration-500 group-hover:scale-105">
                         @else
                             <div class="text-center text-warm-400 space-y-2">
                                 <span class="text-7xl">📚</span>
@@ -88,8 +88,8 @@
                                             @csrf
                                             <input type="hidden" name="book_ids[]" value="{{ $book->id }}">
                                             <button type="submit"
-                                                    class="w-full px-6 py-3 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-lg transition duration-150"
-                                                    onclick="return confirm('Pesan buku ini seharga Rp {{ number_format($book->price, 0, \',\', \'.\') }}?')">
+                                                    class="btn-primary w-full text-base px-6 py-3"
+                                                    onclick="return confirm('Pesan buku ini seharga Rp {{ number_format($book->price, 0, ',', '.') }}?')">
                                                 🛒 Pesan Sekarang
                                             </button>
                                         </form>
@@ -99,8 +99,7 @@
                                         </span>
                                     @endif
                                 @else
-                                    <a href="{{ route('login') }}"
-                                       class="flex-1 text-center px-6 py-3 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-sm rounded-xl shadow transition">
+                                    <a href="{{ route('login') }}" class="btn-primary flex-1 text-center text-base px-6 py-3">
                                         🔒 Login untuk Memesan
                                     </a>
                                 @endauth
@@ -113,7 +112,7 @@
                             @auth
                                 @if (auth()->id() === $book->user_id && $book->status !== 'SOLD')
                                     <a href="{{ route('books.edit', $book) }}"
-                                       class="px-4 py-3 bg-amber-50 text-amber-800 border border-amber-200 text-sm font-semibold rounded-xl hover:bg-amber-100 transition">
+                                       class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-amber-50 text-amber-800 border border-amber-200 text-sm font-semibold rounded-xl hover:bg-amber-100 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200">
                                         ✏️ Edit Listing
                                     </a>
                                 @endif

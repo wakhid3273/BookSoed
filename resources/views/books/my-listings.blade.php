@@ -8,7 +8,7 @@
                     <p class="text-sm text-warm-800 mt-1">Kelola katalog buku bekas yang sedang kamu tawarkan di BookSoed</p>
                 </div>
                 <a href="{{ route('books.create') }}"
-                   class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-sm rounded-xl shadow-xs transition duration-150 shrink-0">
+                   class="btn-primary shrink-0">
                     <span>+</span> Tambah Listing Baru
                 </a>
             </div>

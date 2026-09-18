@@ -1,3 +1,201 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============================================================
+   BOOKSOED — Global UI Enhancements
+   ============================================================ */
+
+/* Page entrance animation — semua halaman */
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-enter {
+    animation: pageEnter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Hero wordmark letter animation */
+@keyframes letterDrop {
+    from {
+        opacity: 0;
+        transform: translateY(-12px) scale(1.1);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes wordSlide {
+    from {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+        transform: translateX(-4px);
+    }
+    to {
+        opacity: 1;
+        clip-path: inset(0 0% 0 0);
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeRise {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-letter-b {
+    animation: letterDrop 380ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both;
+}
+
+.hero-word-rest {
+    animation: wordSlide 500ms cubic-bezier(0.16, 1, 0.3, 1) 480ms both;
+}
+
+.hero-tagline {
+    animation: fadeRise 500ms ease-out 800ms both;
+}
+
+.hero-subtitle {
+    animation: fadeRise 500ms ease-out 1000ms both;
+}
+
+.hero-cta {
+    animation: fadeRise 500ms ease-out 1150ms both;
+}
+
+/* Primary button — elevated hover effect */
+.btn-primary {
+    @apply inline-flex items-center justify-center gap-1.5
+           px-6 py-3 rounded-xl font-semibold text-sm text-white
+           bg-brand-700
+           shadow-md
+           transition-all duration-200 ease-out
+           hover:bg-brand-800 hover:-translate-y-0.5 hover:shadow-lg
+           active:scale-[0.97] active:translate-y-0 active:shadow-md
+           focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
+}
+
+.btn-secondary {
+    @apply inline-flex items-center justify-center gap-1.5
+           px-6 py-3 rounded-xl font-semibold text-sm text-warm-900
+           bg-white border border-warm-300
+           shadow-sm
+           transition-all duration-200 ease-out
+           hover:bg-warm-50 hover:-translate-y-0.5 hover:shadow-md
+           active:scale-[0.97] active:translate-y-0
+           focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
+}
+
+.btn-secondary:hover {
+    border-color: #cbd5e1;
+}
+
+.btn-sm-primary {
+    @apply inline-flex items-center justify-center gap-1.5
+           px-4 py-2 rounded-xl font-semibold text-xs text-white
+           bg-brand-700
+           shadow-sm
+           transition-all duration-200 ease-out
+           hover:bg-brand-800 hover:-translate-y-0.5 hover:shadow-md
+           active:scale-[0.97] active:translate-y-0
+           focus:outline-none;
+}
+
+/* Book card — lift & zoom on hover */
+.book-card {
+    @apply bg-white rounded-2xl border border-warm-200
+           shadow-sm
+           transition-all duration-300 ease-out
+           hover:shadow-lg hover:-translate-y-1.5
+           overflow-hidden flex flex-col;
+}
+
+.book-card:hover {
+    border-color: #8da173;
+}
+
+.book-card-image {
+    @apply overflow-hidden;
+}
+
+.book-card-image img {
+    transition: transform 300ms ease-out;
+}
+
+.book-card:hover .book-card-image img {
+    transform: scale(1.05);
+}
+
+/* Navbar link hover */
+.nav-link {
+    @apply px-3.5 py-2 rounded-lg text-sm font-medium
+           transition-all duration-150
+           text-warm-800 hover:text-brand-700 hover:bg-brand-50/70;
+}
+
+.nav-link-active {
+    @apply bg-brand-50 text-brand-700 font-semibold;
+}
+
+/* Back button enhanced */
+.back-btn {
+    @apply inline-flex items-center gap-2 text-sm font-semibold
+           text-warm-800
+           bg-white border border-warm-200
+           px-4 py-2 rounded-xl
+           shadow-sm
+           transition-all duration-200 ease-out
+           hover:text-brand-700 hover:bg-brand-50 hover:-translate-x-0.5 hover:shadow-md
+           active:scale-[0.97];
+}
+
+.back-btn:hover {
+    border-color: #8da173;
+}
+
+/* Section scroll reveal — safe version (always visible, just animates in) */
+@keyframes revealUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal-card {
+    animation: revealUp 500ms ease-out both;
+}
+
+.reveal-card:nth-child(1) { animation-delay: 100ms; }
+.reveal-card:nth-child(2) { animation-delay: 220ms; }
+.reveal-card:nth-child(3) { animation-delay: 340ms; }
+.reveal-card:nth-child(4) { animation-delay: 460ms; }
+
+/* Status badges */
+.status-available {
+    @apply bg-emerald-100 text-emerald-800 border border-emerald-200;
+}
+.status-reserved {
+    @apply bg-amber-100 text-amber-800 border border-amber-200;
+}
+.status-sold {
+    @apply bg-warm-200 text-warm-800 border border-warm-300;
+}
