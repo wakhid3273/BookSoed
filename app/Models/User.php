@@ -29,4 +29,28 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the books listed by this user as seller.
+     */
+    public function books(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Book::class, 'user_id');
+    }
+
+    /**
+     * Get the orders placed by this user as buyer.
+     */
+    public function buyerOrders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class, 'buyer_id');
+    }
+
+    /**
+     * Get the orders received by this user as seller.
+     */
+    public function sellerOrders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class, 'seller_id');
+    }
 }
