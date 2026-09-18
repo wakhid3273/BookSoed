@@ -1,30 +1,35 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Pilih Metode Pembayaran
-            </h2>
-            <a href="{{ route('orders.show', $order) }}" class="text-sm text-indigo-600 hover:underline">← Kembali ke Order</a>
-        </div>
-    </x-slot>
-
     <div class="py-8">
-        <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white rounded-xl shadow p-6 space-y-6">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-xs p-6 sm:p-8 space-y-6">
 
                 {{-- Detail Ringkas Order --}}
-                <div class="border-b pb-4">
-                    <h3 class="font-bold text-gray-800">Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h3>
-                    <p class="text-sm text-gray-500">Penjual: {{ $order->seller->name }}</p>
-                    <div class="mt-2 text-lg font-bold text-indigo-600">
-                        Total Bayar: Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                <div class="border-b border-warm-200 pb-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-mono text-warm-500">Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
+                            <h1 class="font-serif text-2xl font-bold text-warm-900 mt-0.5">Pilih Metode Pembayaran</h1>
+                        </div>
+                        <a href="{{ route('orders.show', $order) }}" class="text-xs font-semibold text-brand-700 hover:underline">
+                            ← Batal
+                        </a>
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-warm-50 rounded-xl border border-warm-200 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-warm-500">Penjual: <strong class="text-warm-900">{{ $order->seller->name }}</strong></p>
+                            <p class="text-xs text-warm-500 mt-0.5">Total Tagihan (termasuk service fee)</p>
+                        </div>
+                        <div class="text-xl font-bold text-brand-700">
+                            Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                        </div>
                     </div>
                 </div>
 
                 @if ($errors->any())
-                    <div class="p-4 bg-red-100 text-red-700 rounded-lg text-sm space-y-1">
+                    <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-xs space-y-1">
                         @foreach ($errors->all() as $error)
-                            <p>{{ $error }}</p>
+                            <p>• {{ $error }}</p>
                         @endforeach
                     </div>
                 @endif
@@ -34,50 +39,51 @@
                     @csrf
 
                     <div>
-                        <label class="block font-medium text-sm text-gray-700 mb-2">Metode Pembayaran</label>
+                        <label class="block text-xs font-semibold text-warm-800 uppercase tracking-wider mb-3">Pilih Opsi Pembayaran</label>
 
                         <div class="space-y-3">
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="radio" name="payment_method" value="E-WALLET" class="text-indigo-600 focus:ring-indigo-500"
+                            <label class="flex items-start p-4 border border-warm-200 rounded-xl cursor-pointer hover:bg-warm-50/60 transition">
+                                <input type="radio" name="payment_method" value="E-WALLET" class="mt-1 text-brand-700 focus:ring-brand-500"
                                        {{ old('payment_method') === 'E-WALLET' || !old('payment_method') ? 'checked' : '' }}
                                        onclick="toggleEwalletOptions(true)">
-                                <span class="ml-3">
-                                    <span class="block text-sm font-medium text-gray-800">E-Wallet</span>
-                                    <span class="block text-xs text-gray-500">GoPay, OVO, DANA, ShopeePay (Simulasi Instant)</span>
+                                <span class="ml-3 flex-1">
+                                    <span class="block text-sm font-bold text-warm-900">E-Wallet (Instan & Otomatis)</span>
+                                    <span class="block text-xs text-warm-600 mt-0.5">Bayar via GoPay, OVO, DANA, atau ShopeePay</span>
                                 </span>
                             </label>
 
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="radio" name="payment_method" value="COD" class="text-indigo-600 focus:ring-indigo-500"
+                            <label class="flex items-start p-4 border border-warm-200 rounded-xl cursor-pointer hover:bg-warm-50/60 transition">
+                                <input type="radio" name="payment_method" value="COD" class="mt-1 text-brand-700 focus:ring-brand-500"
                                        {{ old('payment_method') === 'COD' ? 'checked' : '' }}
                                        onclick="toggleEwalletOptions(false)">
-                                <span class="ml-3">
-                                    <span class="block text-sm font-medium text-gray-800">COD (Cash on Delivery)</span>
-                                    <span class="block text-xs text-gray-500">Bayar tunai saat buku diserahterimakan</span>
+                                <span class="ml-3 flex-1">
+                                    <span class="block text-sm font-bold text-warm-900">COD (Cash on Delivery / Bayar di Tempat)</span>
+                                    <span class="block text-xs text-warm-600 mt-0.5">Bayar tunai saat buku diserahterimakan oleh kurir/penjual</span>
                                 </span>
                             </label>
                         </div>
                     </div>
 
-                    {{-- Pilihan Provider E-Wallet --}}
-                    <div id="ewallet-section" class="{{ old('payment_method') === 'COD' ? 'hidden' : '' }}">
-                        <label for="ewallet_provider" class="block font-medium text-sm text-gray-700 mb-1">Pilih Provider E-Wallet</label>
-                        <select name="ewallet_provider" id="ewallet_provider" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                            <option value="">-- Pilih Provider --</option>
+                    {{-- Provider E-Wallet --}}
+                    <div id="ewallet-section" class="{{ old('payment_method') === 'COD' ? 'hidden' : '' }} p-4 bg-brand-50/50 border border-brand-200 rounded-xl space-y-2">
+                        <label for="ewallet_provider" class="block text-xs font-semibold text-brand-900">Pilih Provider Dompet Digital</label>
+                        <select name="ewallet_provider" id="ewallet_provider"
+                                class="w-full bg-white border border-warm-200 rounded-xl px-3.5 py-2 text-sm text-warm-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition">
+                            <option value="">-- Pilih Provider E-Wallet --</option>
                             @foreach ($providers as $provider)
                                 <option value="{{ $provider }}" {{ old('ewallet_provider') === $provider ? 'selected' : '' }}>
-                                    {{ $provider }}
+                                    📱 {{ $provider }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="flex justify-end gap-3 pt-4 border-t">
-                        <a href="{{ route('orders.show', $order) }}" class="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50">
+                    <div class="flex justify-end gap-3 pt-4 border-t border-warm-200">
+                        <a href="{{ route('orders.show', $order) }}" class="px-4 py-2.5 border border-warm-200 text-warm-700 text-xs font-semibold rounded-xl hover:bg-warm-100 transition">
                             Batal
                         </a>
-                        <button type="submit" class="px-5 py-2 bg-indigo-600 text-white font-medium text-sm rounded-md hover:bg-indigo-700">
-                            Lanjutkan Pembayaran
+                        <button type="submit" class="px-6 py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs rounded-xl shadow-xs transition duration-150">
+                            Konfirmasi Pembayaran →
                         </button>
                     </div>
                 </form>

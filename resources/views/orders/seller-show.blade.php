@@ -1,91 +1,75 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Detail Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }} — Seller View
-            </h2>
-            <a href="{{ route('seller.orders.index') }}" class="text-sm text-indigo-600 hover:underline">← Kembali ke Order Masuk</a>
-        </div>
-    </x-slot>
-
     <div class="py-8">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-5">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+
+            <div class="flex items-center justify-between">
+                <a href="{{ route('seller.orders.index') }}" class="text-xs font-semibold text-brand-700 hover:underline">
+                    ← Kembali ke Pesanan Masuk
+                </a>
+                <span class="text-xs font-mono text-warm-500">Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
+            </div>
 
             @if (session('success'))
-                <div class="p-4 bg-green-100 text-green-700 rounded-lg">{{ session('success') }}</div>
+                <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium">
+                    ✓ {{ session('success') }}
+                </div>
             @endif
 
-            {{-- Info Order --}}
-            <div class="bg-white rounded-xl shadow p-6">
-                <div class="flex justify-between items-start">
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-xs p-6 space-y-4">
+                <div class="flex justify-between items-start border-b border-warm-200 pb-4">
                     <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Informasi Order</h3>
-                        <p class="text-xs text-gray-400 mt-1">{{ $order->order_date->format('d M Y, H:i') }}</p>
+                        <h1 class="font-serif text-2xl font-bold text-warm-900">Kelola Pesanan Masuk</h1>
+                        <p class="text-xs text-warm-500 mt-1">Order masuk dari {{ $order->buyer->name }}</p>
                     </div>
                     @include('orders._status-badge', ['status' => $order->status])
                 </div>
-                <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+
+                <div class="grid grid-cols-2 gap-4 text-xs pt-1">
                     <div>
-                        <p class="text-gray-400">Buyer</p>
-                        <p class="font-medium text-gray-700">{{ $order->buyer->name }}</p>
-                        <p class="text-xs text-gray-400">{{ $order->buyer->email }}</p>
+                        <span class="text-warm-500 block mb-0.5">Nama Pembeli (Buyer)</span>
+                        <span class="font-semibold text-warm-900 text-sm">👤 {{ $order->buyer->name }}</span>
+                    </div>
+                    <div>
+                        <span class="text-warm-500 block mb-0.5">Waktu Pemesanan</span>
+                        <span class="font-semibold text-warm-900 text-sm">{{ $order->order_date->format('d M Y, H:i') }}</span>
                     </div>
                 </div>
             </div>
 
-            {{-- Items --}}
-            <div class="bg-white rounded-xl shadow overflow-hidden">
-                <div class="px-6 py-4 border-b">
-                    <h3 class="font-bold text-gray-800">Daftar Buku Dipesan</h3>
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-xs overflow-hidden">
+                <div class="px-6 py-4 border-b border-warm-200 bg-warm-50/50">
+                    <h3 class="font-bold text-warm-900 text-sm">Buku yang Dipesan</h3>
                 </div>
-                <table class="w-full text-sm">
-                    <thead class="bg-gray-50 border-b">
-                        <tr>
-                            <th class="px-5 py-3 text-left text-gray-500 font-medium">Buku</th>
-                            <th class="px-4 py-3 text-right text-gray-500 font-medium">Harga Transaksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @foreach ($order->items as $item)
-                            <tr>
-                                <td class="px-5 py-4">
-                                    <p class="font-medium text-gray-800">{{ $item->book->title ?? '(Buku telah dihapus)' }}</p>
-                                    @if ($item->book)
-                                        <p class="text-xs text-gray-400">{{ $item->book->author }} · {{ $item->book->category->name ?? '' }}</p>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-4 text-right font-semibold text-gray-700">
-                                    Rp {{ number_format($item->price, 0, ',', '.') }}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <div class="px-6 py-4 border-t bg-gray-50 space-y-1 text-sm">
-                    <div class="flex justify-between text-gray-600">
-                        <span>Subtotal</span>
-                        <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
-                    </div>
-                    <div class="flex justify-between text-gray-600">
-                        <span>Service Fee</span>
-                        <span>Rp {{ number_format($order->service_fee, 0, ',', '.') }}</span>
-                    </div>
-                    <div class="flex justify-between font-bold text-gray-800 text-base border-t pt-2 mt-2">
-                        <span>Total Diterima Buyer</span>
-                        <span>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
-                    </div>
+                <div class="divide-y divide-warm-100">
+                    @foreach ($order->items as $item)
+                        <div class="p-6 flex items-center justify-between gap-4">
+                            <div>
+                                <h4 class="font-bold text-warm-900 text-sm">{{ $item->book->title ?? '(Buku telah dihapus)' }}</h4>
+                                @if ($item->book)
+                                    <p class="text-xs text-warm-500 mt-1">
+                                        Penulis: {{ $item->book->author }} · Kategori: {{ $item->book->category->name ?? '-' }}
+                                    </p>
+                                @endif
+                            </div>
+                            <div class="text-right font-bold text-warm-900 text-sm">
+                                Rp {{ number_format($item->price, 0, ',', '.') }}
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
-            {{-- Aksi Seller --}}
             @if ($order->status === 'PENDING')
-                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-center justify-between">
-                    <p class="text-sm text-yellow-800">Order ini sedang menunggu konfirmasimu.</p>
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 space-y-3">
+                    <h4 class="font-bold text-amber-900 text-sm">Aksi Seller: Memproses Pesanan</h4>
+                    <p class="text-xs text-amber-800 leading-relaxed">
+                        Klik tombol di bawah untuk menyetujui dan mulai memproses pesanan ini. Status order akan berubah dari PENDING menjadi PROCESSING.
+                    </p>
                     <form action="{{ route('seller.orders.process', $order) }}" method="POST">
                         @csrf
                         <button type="submit"
-                                class="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition">
-                            Proses Order
+                                class="px-5 py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs rounded-xl shadow-xs transition duration-150">
+                            ✓ Proses Pesanan Ini
                         </button>
                     </form>
                 </div>

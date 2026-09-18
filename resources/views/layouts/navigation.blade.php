@@ -1,88 +1,101 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white/95 backdrop-blur-md border-b border-warm-200 sticky top-0 z-50">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex items-center gap-8">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('books.index') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('books.index') }}" class="transition hover:opacity-90">
+                        <x-application-logo class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-1 sm:flex sm:items-center">
+                    <a href="{{ route('books.index') }}"
+                       class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('books.index') || request()->routeIs('books.show') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
+                        Marketplace
+                    </a>
+
                     @auth
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                    @endauth
-                    <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.index') || request()->routeIs('books.show')">
-                        {{ __('Marketplace') }}
-                    </x-nav-link>
-                    @auth
-                        <x-nav-link :href="route('books.my-listings')" :active="request()->routeIs('books.my-listings') || request()->routeIs('books.create') || request()->routeIs('books.edit')">
-                            {{ __('Listing Saya') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
-                            {{ __('Order Saya') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('seller.orders.index')" :active="request()->routeIs('seller.orders.*')">
-                            {{ __('Order Masuk') }}
-                        </x-nav-link>
+                        <a href="{{ route('orders.index') }}"
+                           class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('orders.*') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
+                            Order Saya
+                        </a>
+                        <a href="{{ route('books.my-listings') }}"
+                           class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('books.my-listings') || request()->routeIs('books.create') || request()->routeIs('books.edit') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
+                            Listing Saya
+                        </a>
+                        <a href="{{ route('seller.orders.index') }}"
+                           class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('seller.orders.*') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
+                            Pesanan Masuk
+                        </a>
                         @if (Auth::user()->role === 'admin')
-                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                                {{ __('ERP Admin Area') }}
-                            </x-nav-link>
+                            <a href="{{ route('admin.dashboard') }}"
+                               class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('admin.dashboard') ? 'bg-amber-100 text-amber-900 font-semibold' : 'text-amber-800 hover:bg-amber-50' }}">
+                                🛡️ Admin ERP
+                            </a>
                         @endif
                     @endauth
                 </div>
             </div>
 
-            <!-- Settings Dropdown (only when logged in) -->
-            @auth
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+            <!-- Right Actions (Sell Book CTA & Profile / Auth) -->
+            <div class="hidden sm:flex sm:items-center sm:gap-3">
+                <a href="{{ route('books.create') }}"
+                   class="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-700 hover:bg-brand-800 text-white font-medium text-sm rounded-lg shadow-sm hover:shadow transition duration-150">
+                    <span>+</span> Jual Buku
+                </a>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+                @auth
+                    <div class="ms-2">
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <button class="inline-flex items-center gap-2 px-3 py-1.5 border border-warm-200 text-sm font-medium rounded-lg text-warm-800 bg-warm-50 hover:bg-warm-100 focus:outline-none transition">
+                                    <div class="w-6 h-6 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-xs">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    </div>
+                                    <span>{{ Auth::user()->name }}</span>
+                                    <svg class="w-4 h-4 text-warm-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </x-slot>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('profile.edit')">
+                                    ⚙️ Pengaturan Profil
+                                </x-dropdown-link>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <x-dropdown-link :href="route('logout')"
+                                            onclick="event.preventDefault(); this.closest('form').submit();"
+                                            class="text-red-600 hover:bg-red-50">
+                                        🚪 Log Out
+                                    </x-dropdown-link>
+                                </form>
+                            </x-slot>
+                        </x-dropdown>
+                    </div>
+                @else
+                    <div class="flex items-center gap-2 border-l border-warm-200 pl-3">
+                        <a href="{{ route('login') }}" class="px-3 py-1.5 text-sm font-medium text-warm-800 hover:text-brand-700 rounded-lg hover:bg-warm-100 transition">
+                            Masuk
+                        </a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-lg transition">
+                            Daftar
+                        </a>
+                    </div>
+                @endauth
             </div>
-            @else
-            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-3">
-                <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700">Masuk</a>
-                <a href="{{ route('register') }}" class="text-sm px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">Daftar</a>
-            </div>
-            @endauth
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+            <!-- Mobile Hamburger Button -->
+            <div class="flex items-center sm:hidden gap-2">
+                <a href="{{ route('books.create') }}" class="px-3 py-1.5 bg-brand-700 text-white text-xs font-semibold rounded-md">
+                    + Jual
+                </a>
+                <button @click="open = ! open" class="p-2 rounded-lg text-warm-800 hover:bg-warm-100 focus:outline-none transition">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -92,47 +105,44 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('books.index')" :active="request()->routeIs('books.index')">
-                {{ __('Marketplace') }}
-            </x-responsive-nav-link>
-            @auth
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('books.my-listings')" :active="request()->routeIs('books.my-listings')">
-                    {{ __('Listing Saya') }}
-                </x-responsive-nav-link>
-            @endauth
-        </div>
+    <!-- Responsive Mobile Menu -->
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-warm-50 border-t border-warm-200 px-4 pt-3 pb-4 space-y-2">
+        <a href="{{ route('books.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('books.index') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
+            📖 Marketplace Buku
+        </a>
 
-        <!-- Responsive Settings Options -->
         @auth
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
+            <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('orders.*') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
+                📦 Order Saya
+            </a>
+            <a href="{{ route('books.my-listings') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('books.my-listings') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
+                📚 Listing Saya
+            </a>
+            <a href="{{ route('seller.orders.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('seller.orders.*') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
+                📬 Pesanan Masuk
+            </a>
+            @if (Auth::user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium bg-amber-100 text-amber-900">
+                    🛡️ Admin ERP
+                </a>
+            @endif
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+            <div class="pt-3 border-t border-warm-200">
+                <div class="px-3 mb-2">
+                    <p class="font-semibold text-warm-900 text-sm">{{ Auth::user()->name }}</p>
+                    <p class="text-xs text-warm-800">{{ Auth::user()->email }}</p>
+                </div>
+                <a href="{{ route('profile.edit') }}" class="block px-3 py-1.5 text-sm text-warm-800">Profil</a>
+                <form method="POST" action="{{ route('logout') }}" class="mt-1">
                     @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    <button type="submit" class="w-full text-left px-3 py-1.5 text-sm text-red-600">Logout</button>
                 </form>
             </div>
-        </div>
+        @else
+            <div class="pt-3 border-t border-warm-200 flex gap-2">
+                <a href="{{ route('login') }}" class="flex-1 text-center py-2 bg-white border border-warm-200 text-warm-800 font-medium text-sm rounded-lg">Masuk</a>
+                <a href="{{ route('register') }}" class="flex-1 text-center py-2 bg-brand-700 text-white font-medium text-sm rounded-lg">Daftar</a>
+            </div>
         @endauth
     </div>
 </nav>
