@@ -65,13 +65,31 @@
                             </p>
                         </div>
 
-                        {{-- Tombol aksi --}}
+                        {{-- Tombol Order --}}
                         <div class="mt-6 flex gap-3">
                             @if ($book->status === 'AVAILABLE')
-                                {{-- Tombol Order akan ditambahkan pada tahap Order --}}
-                                <span class="inline-flex items-center px-5 py-2 bg-gray-100 text-gray-500 text-sm rounded-md cursor-not-allowed">
-                                    Order (Segera Hadir)
-                                </span>
+                                @auth
+                                    @if (auth()->id() !== $book->user_id)
+                                        <form action="{{ route('orders.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="book_ids[]" value="{{ $book->id }}">
+                                            <button type="submit"
+                                                    class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-md hover:bg-indigo-700 transition"
+                                                    onclick="return confirm('Pesan buku ini seharga Rp {{ number_format($book->price, 0, \',\', \'.\') }}?')">
+                                                Pesan Sekarang
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="inline-flex items-center px-5 py-2 bg-gray-100 text-gray-500 text-sm rounded-md">
+                                            Ini listing milikmu
+                                        </span>
+                                    @endif
+                                @else
+                                    <a href="{{ route('login') }}"
+                                       class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-md hover:bg-indigo-700 transition">
+                                        Login untuk Memesan
+                                    </a>
+                                @endauth
                             @else
                                 <span class="inline-flex items-center px-5 py-2 bg-gray-100 text-gray-400 text-sm rounded-md">
                                     Tidak Tersedia

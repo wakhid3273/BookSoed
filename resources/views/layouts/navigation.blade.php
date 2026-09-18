@@ -24,6 +24,12 @@
                         <x-nav-link :href="route('books.my-listings')" :active="request()->routeIs('books.my-listings') || request()->routeIs('books.create') || request()->routeIs('books.edit')">
                             {{ __('Listing Saya') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
+                            {{ __('Order Saya') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('seller.orders.index')" :active="request()->routeIs('seller.orders.*')">
+                            {{ __('Order Masuk') }}
+                        </x-nav-link>
                         @if (Auth::user()->role === 'admin')
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                 {{ __('ERP Admin Area') }}

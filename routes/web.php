@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SellerOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,7 +39,7 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
 // ---------------------------------------------------------------
-// Seller — hanya user yang login
+// Seller listing management — hanya user yang login
 // ---------------------------------------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/my-listings', [BookController::class, 'myListings'])->name('books.my-listings');
@@ -46,6 +48,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-listings/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('/my-listings/{book}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/my-listings/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+});
+
+// ---------------------------------------------------------------
+// Buyer — Order management
+// ---------------------------------------------------------------
+Route::middleware('auth')->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+});
+
+// ---------------------------------------------------------------
+// Seller — Incoming orders
+// ---------------------------------------------------------------
+Route::middleware('auth')->prefix('seller/orders')->name('seller.orders.')->group(function () {
+    Route::get('/', [SellerOrderController::class, 'index'])->name('index');
+    Route::get('/{order}', [SellerOrderController::class, 'show'])->name('show');
+    Route::post('/{order}/process', [SellerOrderController::class, 'process'])->name('process');
 });
 
 require __DIR__.'/auth.php';

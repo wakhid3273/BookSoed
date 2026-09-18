@@ -23,11 +23,29 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'order_date' => 'datetime',
-        'subtotal' => 'decimal:2',
-        'service_fee' => 'decimal:2',
+        'order_date'   => 'datetime',
+        'subtotal'     => 'decimal:2',
+        'service_fee'  => 'decimal:2',
         'total_amount' => 'decimal:2',
     ];
+
+    /**
+     * Platform service fee (flat), dipisahkan dari delivery fee (SCM).
+     */
+    const SERVICE_FEE = 1000;
+
+    /**
+     * Status yang valid.
+     */
+    public static function statuses(): array
+    {
+        return [
+            'PENDING'    => 'Menunggu',
+            'PROCESSING' => 'Diproses',
+            'COMPLETED'  => 'Selesai',
+            'CANCELLED'  => 'Dibatalkan',
+        ];
+    }
 
     /**
      * Get the buyer for this order.
