@@ -3,9 +3,7 @@
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             <div class="flex items-center justify-between">
-                <a href="{{ route('seller.orders.index') }}" class="text-xs font-semibold text-brand-700 hover:underline">
-                    ← Kembali ke Pesanan Masuk
-                </a>
+                <x-back-button :href="route('seller.orders.index')" label="Kembali ke Pesanan Masuk" />
                 <span class="text-xs font-mono text-warm-500">Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
             </div>
 

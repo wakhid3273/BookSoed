@@ -7,9 +7,7 @@
                     <h1 class="font-serif text-2xl font-bold text-warm-900">Edit Listing Buku</h1>
                     <p class="text-xs text-warm-700">Perbarui informasi listing buku {{ $book->title }}</p>
                 </div>
-                <a href="{{ route('books.my-listings') }}" class="text-xs font-semibold text-brand-700 hover:underline">
-                    ← Kembali ke Listing Saya
-                </a>
+                <x-back-button :href="route('books.my-listings')" label="Kembali ke Listing Saya" />
             </div>
 
             <div class="bg-white rounded-2xl border border-warm-200 shadow-xs p-6 sm:p-8">

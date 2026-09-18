@@ -4,9 +4,7 @@
 
             {{-- Breadcrumb & Back --}}
             <div class="flex items-center justify-between">
-                <a href="{{ route('orders.index') }}" class="text-xs font-semibold text-brand-700 hover:underline">
-                    ← Kembali ke Order Saya
-                </a>
+                <x-back-button :href="route('orders.index')" label="Kembali ke Order Saya" />
                 <span class="text-xs font-mono text-warm-500">Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
             </div>
 

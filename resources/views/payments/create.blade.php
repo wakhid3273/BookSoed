@@ -10,9 +10,7 @@
                             <span class="text-xs font-mono text-warm-500">Order #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span>
                             <h1 class="font-serif text-2xl font-bold text-warm-900 mt-0.5">Pilih Metode Pembayaran</h1>
                         </div>
-                        <a href="{{ route('orders.show', $order) }}" class="text-xs font-semibold text-brand-700 hover:underline">
-                            ← Batal
-                        </a>
+                        <x-back-button :href="route('orders.show', $order)" label="Batal" />
                     </div>
                     
                     <div class="mt-4 p-4 bg-warm-50 rounded-xl border border-warm-200 flex justify-between items-center">

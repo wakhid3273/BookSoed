@@ -2,12 +2,12 @@
     <div class="py-8">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-            {{-- Breadcrumb Navigation --}}
-            <nav class="flex items-center gap-2 text-xs text-warm-600">
-                <a href="{{ route('books.index') }}" class="hover:text-brand-700 transition">Marketplace</a>
-                <span>/</span>
-                <span class="text-warm-900 font-medium truncate max-w-xs">{{ $book->title }}</span>
-            </nav>
+            {{-- Navigation Back & Breadcrumb --}}
+            <div class="flex items-center gap-3">
+                <x-back-button :href="route('books.index')" label="Kembali ke Marketplace" />
+                <span class="text-warm-300">|</span>
+                <span class="text-xs text-warm-900 font-medium truncate max-w-xs">{{ $book->title }}</span>
+            </div>
 
             <div class="bg-white rounded-2xl border border-warm-200 shadow-xs overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-12">

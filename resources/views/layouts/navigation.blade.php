@@ -5,13 +5,17 @@
             <div class="flex items-center gap-8">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('books.index') }}" class="transition hover:opacity-90">
+                    <a href="{{ url('/') }}" class="transition hover:opacity-90">
                         <x-application-logo class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-1 sm:flex sm:items-center">
+                    <a href="{{ url('/') }}"
+                       class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->is('/') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
+                        Beranda
+                    </a>
                     <a href="{{ route('books.index') }}"
                        class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('books.index') || request()->routeIs('books.show') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
                         Marketplace
