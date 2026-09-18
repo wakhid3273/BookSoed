@@ -34,6 +34,11 @@ class Order extends Model
      */
     const SERVICE_FEE = 1000;
 
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_PROCESSING = 'PROCESSING';
+    const STATUS_COMPLETED = 'COMPLETED';
+    const STATUS_CANCELLED = 'CANCELLED';
+
     /**
      * Status yang valid.
      */

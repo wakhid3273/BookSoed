@@ -10,9 +10,19 @@ class Payment extends Model
 {
     use HasFactory;
 
+    const METHOD_E_WALLET = 'E-WALLET';
+    const METHOD_COD = 'COD';
+
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_PAID = 'PAID';
+    const STATUS_FAILED = 'FAILED';
+
+    const PROVIDERS = ['GoPay', 'OVO', 'DANA', 'ShopeePay'];
+
     protected $fillable = [
         'order_id',
         'payment_method',
+        'ewallet_provider',
         'amount',
         'payment_status',
         'transaction_reference',
@@ -23,6 +33,21 @@ class Payment extends Model
         'amount' => 'decimal:2',
         'paid_at' => 'datetime',
     ];
+
+    public function isPaid(): bool
+    {
+        return $this->payment_status === self::STATUS_PAID;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->payment_status === self::STATUS_PENDING;
+    }
+
+    public function isFailed(): bool
+    {
+        return $this->payment_status === self::STATUS_FAILED;
+    }
 
     /**
      * Get the order associated with this payment.

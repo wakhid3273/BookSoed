@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SellerOrderController;
 use Illuminate\Support\Facades\Route;
@@ -59,6 +60,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+});
+
+// ---------------------------------------------------------------
+// Payment management (ERP)
+// ---------------------------------------------------------------
+Route::middleware('auth')->group(function () {
+    Route::get('/orders/{order}/payment/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/orders/{order}/payment', [PaymentController::class, 'store'])->name('payments.store');
+    Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+    Route::post('/payments/{payment}/simulate-success', [PaymentController::class, 'simulateSuccess'])->name('payments.simulate-success');
+    Route::post('/payments/{payment}/simulate-fail', [PaymentController::class, 'simulateFail'])->name('payments.simulate-fail');
 });
 
 // ---------------------------------------------------------------

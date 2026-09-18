@@ -84,6 +84,34 @@
                 </div>
             </div>
 
+            {{-- Payment Info / Pay Action --}}
+            <div class="bg-white rounded-xl shadow p-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-gray-800">Status Pembayaran</h3>
+                        @if ($order->payment)
+                            <div class="mt-1 flex items-center gap-2 text-sm">
+                                <span class="text-gray-500">Metode: {{ $order->payment->payment_method }} {{ $order->payment->ewallet_provider ? '('.$order->payment->ewallet_provider.')' : '' }}</span>
+                                @include('payments._status-badge', ['status' => $order->payment->payment_status])
+                            </div>
+                        @else
+                            <p class="text-xs text-gray-400 mt-1">Belum ada pembayaran dilakukan.</p>
+                        @endif
+                    </div>
+
+                    @if ($order->payment)
+                        <a href="{{ route('payments.show', $order->payment) }}" class="text-sm font-medium text-indigo-600 hover:underline">
+                            Lihat Detail Pembayaran →
+                        </a>
+                    @elseif (auth()->id() === $order->buyer_id && $order->order_status !== 'CANCELLED')
+                        <a href="{{ route('payments.create', $order) }}"
+                           class="px-5 py-2 bg-indigo-600 text-white font-medium text-sm rounded-md hover:bg-indigo-700 transition shadow-sm">
+                            Bayar Sekarang
+                        </a>
+                    @endif
+                </div>
+            </div>
+
             {{-- Aksi --}}
             <div class="flex gap-3">
                 @if ($order->status === 'PENDING')
