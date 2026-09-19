@@ -258,4 +258,55 @@ class OrderManagementTest extends TestCase
         // Book tidak berubah menjadi RESERVED
         $this->assertEquals('AVAILABLE', $book->fresh()->status);
     }
+
+    // 16. Seller dapat melihat order miliknya di seller index
+    public function test_seller_can_view_own_incoming_orders(): void
+    {
+        $buyer   = $this->makeUser();
+        $seller1 = $this->makeUser();
+        $seller2 = $this->makeUser();
+
+        $book1 = $this->makeBook($seller1, ['title' => 'Buku Seller 1']);
+        $book2 = $this->makeBook($seller2, ['title' => 'Buku Seller 2']);
+
+        $this->placeOrder($buyer, [$book1->id]);
+        $this->placeOrder($buyer, [$book2->id]);
+
+        $response = $this->actingAs($seller1)->get(route('seller.orders.index'));
+
+        $response->assertOk();
+        $response->assertSee('Buku Seller 1');
+        $response->assertDontSee('Buku Seller 2');
+    }
+
+    // 17. Seller dapat memproses order PENDING menjadi PROCESSING
+    public function test_seller_can_process_pending_order(): void
+    {
+        $buyer  = $this->makeUser();
+        $seller = $this->makeUser();
+        $book   = $this->makeBook($seller);
+
+        $this->placeOrder($buyer, [$book->id]);
+        $order = Order::first();
+
+        $response = $this->actingAs($seller)->post(route('seller.orders.process', $order));
+
+        $response->assertRedirect(route('seller.orders.show', $order));
+        $this->assertEquals('PROCESSING', $order->fresh()->status);
+    }
+
+    // 18. Seller tidak dapat memproses order yang sudah PROCESSING, COMPLETED, atau CANCELLED
+    public function test_seller_cannot_process_non_pending_order(): void
+    {
+        $buyer  = $this->makeUser();
+        $seller = $this->makeUser();
+        $book   = $this->makeBook($seller);
+
+        $this->placeOrder($buyer, [$book->id]);
+        $order = Order::first();
+        $order->update(['status' => 'PROCESSING']);
+
+        $response = $this->actingAs($seller)->post(route('seller.orders.process', $order));
+        $response->assertStatus(403);
+    }
 }

@@ -16,7 +16,7 @@ class SellerOrderController extends Controller
      */
     public function index(): View
     {
-        $orders = Order::with(['buyer', 'items.book'])
+        $orders = Order::with(['buyer', 'items.book', 'payment'])
             ->where('seller_id', auth()->id())
             ->latest()
             ->paginate(10);
@@ -31,7 +31,7 @@ class SellerOrderController extends Controller
     {
         $this->authorize('viewAsSeller', $order);
 
-        $order->load(['buyer', 'seller', 'items.book.category']);
+        $order->load(['buyer', 'seller', 'items.book.category', 'payment']);
 
         return view('orders.seller-show', compact('order'));
     }
