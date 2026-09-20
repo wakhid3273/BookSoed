@@ -1,238 +1,245 @@
-<x-crm-layout>
-    <x-slot name="title">Dashboard CRM</x-slot>
+<x-app-layout>
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
-    {{-- ══════════════════════════════════════════════════════════════
-         HERO PROFILE SECTION
-    ══════════════════════════════════════════════════════════════ --}}
-    <div style="margin-bottom: 2.5rem">
-
-        {{-- Profile Hero Card --}}
-        <div class="lg-card" style="padding: 2rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
-
-            {{-- Large Avatar --}}
-            <div style="
-                width: 80px; height: 80px; border-radius: 50%;
-                border: 2px solid rgba(246,216,58,0.5);
-                background: linear-gradient(135deg, #4B7416 0%, #5C9550 60%, #86C3C9 100%);
-                display: flex; align-items: center; justify-content: center;
-                flex-shrink: 0;
-                box-shadow: 0 0 24px rgba(92,149,80,0.3);
-                font-family: 'Cormorant Garamond', serif;
-                font-size: 2rem; font-weight: 700; color: #F6D83A;
-            " id="dashboard-avatar">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </div>
-
-            {{-- Profile Info --}}
-            <div style="flex: 1; min-width: 200px;">
-                <div style="display:flex; align-items:center; gap: 0.75rem; flex-wrap:wrap; margin-bottom: 0.4rem;">
-                    <h1 class="nouveau-heading" style="font-size: 1.7rem; margin: 0;">
-                        {{ Auth::user()->name }}
-                    </h1>
-                    <span class="lg-pill lg-pill-leaf">✓ Civitas Unsoed</span>
+            {{-- ── PAGE HEADER ─────────────────────────────────────────── --}}
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-warm-200 pb-6">
+                <div>
+                    <h1 class="font-serif text-3xl font-bold text-warm-900">Profil Civitas</h1>
+                    <p class="text-sm text-warm-700 mt-1">Dashboard aktivitas transaksi dan kelola preferensi buku kamu</p>
                 </div>
-                <p class="text-muted" style="margin: 0; font-size: 0.85rem;">{{ Auth::user()->email }}</p>
-                <p style="margin: 0.3rem 0 0; font-size: 0.78rem; color: rgba(134,195,201,0.7);">
-                    Mahasiswa / Civitas Akademika Universitas Jenderal Soedirman
-                </p>
-            </div>
-
-            {{-- Quick Actions --}}
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; flex-shrink: 0;">
-                <a href="{{ route('crm.wishlist') }}" class="lg-btn lg-btn-plum" id="btn-wishlist-hero">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M7 12S1 8.5 1 4.5a3 3 0 016 0 3 3 0 016 0C13 8.5 7 12 7 12z" stroke="currentColor" stroke-width="1.2" fill="none"/>
-                    </svg>
-                    Wishlist
+                <a href="{{ route('crm.wishlist') }}" class="btn-sm-primary shrink-0">
+                    ❤️ Wishlist Saya
                 </a>
             </div>
-        </div>
-    </div>
 
-    {{-- ══════════════════════════════════════════════════════════════
-         STATISTICS ROW
-    ══════════════════════════════════════════════════════════════ --}}
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2.5rem;" id="stats-row">
-
-        {{-- Stat: Pembelian Selesai --}}
-        <div class="lg-card stat-card" id="stat-purchases">
-            <div class="stat-number text-petal">{{ $purchaseCount }}</div>
-            <div class="stat-label">Pembelian Selesai</div>
-            <div style="margin-top: 0.75rem;">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style="opacity:0.3">
-                    <path d="M5 6h18M5 6l2 16h14l2-16" stroke="#F6D83A" stroke-width="1.3" fill="none"/>
-                    <circle cx="10" cy="24" r="1.5" fill="#F6D83A"/>
-                    <circle cx="18" cy="24" r="1.5" fill="#F6D83A"/>
-                    <path d="M10 13l3 3 5-5" stroke="#5C9550" stroke-width="1.3" stroke-linecap="round"/>
-                </svg>
-            </div>
-        </div>
-
-        {{-- Stat: Penjualan Selesai --}}
-        <div class="lg-card stat-card" id="stat-sales">
-            <div class="stat-number text-leaf">{{ $salesCount }}</div>
-            <div class="stat-label">Buku Terjual</div>
-            <div style="margin-top: 0.75rem;">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style="opacity:0.3">
-                    <rect x="4" y="4" width="20" height="20" rx="3" stroke="#5C9550" stroke-width="1.3" fill="none"/>
-                    <path d="M9 9h10M9 14h7M9 19h5" stroke="#8fcf80" stroke-width="1.2" stroke-linecap="round"/>
-                </svg>
-            </div>
-        </div>
-
-        {{-- Stat: Wishlist --}}
-        <div class="lg-card stat-card" id="stat-wishlist">
-            <div class="stat-number text-plum">{{ $wishlistCount }}</div>
-            <div class="stat-label">Wishlist</div>
-            <div style="margin-top: 0.75rem;">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style="opacity:0.3">
-                    <path d="M14 23S4 17 4 10a6 6 0 0110 4.47A6 6 0 0124 10c0 7-10 13-10 13z" stroke="#c98ab8" stroke-width="1.3" fill="none"/>
-                </svg>
-            </div>
-        </div>
-
-    </div>
-
-    {{-- ══════════════════════════════════════════════════════════════
-         HISTORY SECTION (2 columns)
-    ══════════════════════════════════════════════════════════════ --}}
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;" id="history-grid">
-
-        {{-- ── PURCHASE HISTORY ──────────────────────────── --}}
-        <div class="lg-card" id="purchase-history-card">
-            {{-- Card inner shine handled by ::before/::after --}}
-            <div style="padding: 1.5rem 1.5rem 0.5rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-                    <h2 class="nouveau-subheading" style="margin:0;">Riwayat Pembelian</h2>
-                    <span class="lg-pill lg-pill-petal">{{ $purchaseCount }} total</span>
+            {{-- ── FLASH MESSAGE ───────────────────────────────────────── --}}
+            @if(session('crm_status'))
+                <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium flex items-center gap-2"
+                     id="crm-flash-alert" role="alert">
+                    ✓ {{ session('crm_status') }}
                 </div>
+            @endif
 
-                @forelse($purchaseHistory as $order)
-                    <div class="order-row" id="purchase-row-{{ $order->order_id }}">
-                        {{-- Book icon --}}
-                        <div style="
-                            width: 38px; height: 48px; flex-shrink: 0;
-                            background: linear-gradient(135deg, rgba(75,116,22,0.5), rgba(12,20,16,0.9));
-                            border-radius: 4px;
-                            border: 1px solid rgba(246,216,58,0.15);
-                            display: flex; align-items: center; justify-content: center;
-                        ">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <rect x="2" y="1" width="12" height="14" rx="1.5" stroke="#DDB911" stroke-width="1" fill="none"/>
-                                <path d="M5 5h6M5 8h4" stroke="#5C9550" stroke-width="0.9"/>
-                            </svg>
-                        </div>
-
-                        {{-- Info --}}
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.83rem; font-weight:500; color: var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ $order->orderItems->first()?->book?->title ?? 'Pesanan #'.$order->order_id }}
-                            </div>
-                            <div style="font-size:0.72rem; color: var(--text-muted);">
-                                {{ $order->order_date?->format('d M Y') }}
-                            </div>
-                        </div>
-
-                        {{-- Status & Review --}}
-                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.3rem; flex-shrink:0;">
-                            @php
-                                $statusClass = match($order->order_status) {
-                                    'completed' => 'lg-pill-leaf',
-                                    'pending'   => 'lg-pill-petal',
-                                    'cancelled' => 'lg-pill-plum',
-                                    default     => 'lg-pill-muted',
-                                };
-                            @endphp
-                            <span class="lg-pill {{ $statusClass }}">{{ ucfirst($order->order_status) }}</span>
-                            @if($order->order_status === 'completed' && !$order->review)
-                                <a href="{{ route('crm.review.create', $order) }}"
-                                   class="lg-btn lg-btn-ghost"
-                                   style="padding: 0.15rem 0.6rem; font-size: 0.7rem;"
-                                   id="btn-review-{{ $order->order_id }}">
-                                    + Beri Ulasan
-                                </a>
-                            @elseif($order->review)
-                                <span style="font-size:0.7rem; color: var(--stamen);">
-                                    ★ {{ $order->review->rating }}/5
-                                </span>
-                            @endif
-                        </div>
+            {{-- ── PROFILE HERO CARD ───────────────────────────────────── --}}
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-sm p-6" id="profile-hero-card">
+                <div class="flex items-center gap-5 flex-wrap">
+                    {{-- Avatar --}}
+                    <div class="w-16 h-16 rounded-full bg-brand-700 text-white flex items-center justify-center
+                                font-serif text-2xl font-bold shrink-0 shadow-md"
+                         id="dashboard-avatar">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
-                @empty
-                    <div style="text-align:center; padding: 2rem 0; color: var(--text-muted);">
-                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin: 0 auto 0.75rem; opacity:0.3; display:block;">
-                            <circle cx="18" cy="18" r="16" stroke="currentColor" stroke-width="1"/>
-                            <path d="M13 18h10M18 13v10" stroke="currentColor" stroke-width="1.3"/>
-                        </svg>
-                        <p style="font-size:0.82rem; margin:0;">Belum ada pembelian</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
 
-        {{-- ── SALES HISTORY ─────────────────────────────── --}}
-        <div class="lg-card" id="sales-history-card">
-            <div style="padding: 1.5rem 1.5rem 0.5rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-                    <h2 class="nouveau-subheading" style="margin:0;">Riwayat Penjualan</h2>
-                    <span class="lg-pill lg-pill-leaf">{{ $salesCount }} terjual</span>
-                </div>
-
-                @forelse($salesHistory as $order)
-                    <div class="order-row" id="sales-row-{{ $order->order_id }}">
-                        <div style="
-                            width: 38px; height: 48px; flex-shrink: 0;
-                            background: linear-gradient(135deg, rgba(92,149,80,0.4), rgba(12,20,16,0.9));
-                            border-radius: 4px;
-                            border: 1px solid rgba(92,149,80,0.25);
-                            display: flex; align-items: center; justify-content: center;
-                        ">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <rect x="2" y="1" width="12" height="14" rx="1.5" stroke="#5C9550" stroke-width="1" fill="none"/>
-                                <path d="M5 5h6M5 8h4" stroke="#DDB911" stroke-width="0.9"/>
-                            </svg>
-                        </div>
-
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.83rem; font-weight:500; color: var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ $order->orderItems->first()?->book?->title ?? 'Pesanan #'.$order->order_id }}
-                            </div>
-                            <div style="font-size:0.72rem; color: var(--text-muted);">
-                                Pembeli: {{ $order->buyer?->name }}
-                                &bull; {{ $order->order_date?->format('d M Y') }}
-                            </div>
-                        </div>
-
-                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.3rem; flex-shrink:0;">
-                            @php
-                                $statusClass = match($order->order_status) {
-                                    'completed' => 'lg-pill-leaf',
-                                    'pending'   => 'lg-pill-petal',
-                                    default     => 'lg-pill-muted',
-                                };
-                            @endphp
-                            <span class="lg-pill {{ $statusClass }}">{{ ucfirst($order->order_status) }}</span>
-                            <span style="font-size:0.78rem; color: var(--petal); font-family: 'Cormorant Garamond', serif;">
-                                Rp{{ number_format($order->total_amount, 0, ',', '.') }}
+                    {{-- Profile Info --}}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 flex-wrap mb-1">
+                            <h2 class="font-serif text-xl font-bold text-warm-900">{{ Auth::user()->name }}</h2>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+                                         bg-brand-50 text-brand-700 border border-brand-200">
+                                ✓ Civitas Unsoed
                             </span>
                         </div>
+                        <p class="text-sm text-warm-600">{{ Auth::user()->email }}</p>
+                        <p class="text-xs text-warm-500 mt-0.5">Mahasiswa / Civitas Akademika Universitas Jenderal Soedirman</p>
                     </div>
-                @empty
-                    <div style="text-align:center; padding: 2rem 0; color: var(--text-muted);">
-                        <p style="font-size:0.82rem; margin:0;">Belum ada penjualan</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
 
+                    {{-- Quick Actions --}}
+                    <div class="flex gap-2 flex-wrap shrink-0">
+                        <a href="{{ route('crm.wishlist') }}"
+                           class="btn-secondary text-sm px-4 py-2"
+                           id="btn-wishlist-hero">
+                            ❤️ Wishlist
+                        </a>
+                        <a href="{{ route('profile.edit') }}"
+                           class="btn-secondary text-sm px-4 py-2">
+                            ⚙️ Edit Profil
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── STATISTICS ──────────────────────────────────────────── --}}
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="stats-row">
+
+                {{-- Stat: Pembelian Selesai --}}
+                <div class="bg-white rounded-2xl border border-warm-200 shadow-sm p-6 text-center reveal-card"
+                     id="stat-purchases">
+                    <div class="font-serif text-4xl font-bold text-brand-700 leading-none">{{ $purchaseCount }}</div>
+                    <div class="text-xs text-warm-500 mt-2 uppercase tracking-widest font-semibold">Pembelian Selesai</div>
+                    <div class="mt-3 text-2xl opacity-30">🛒</div>
+                </div>
+
+                {{-- Stat: Buku Terjual --}}
+                <div class="bg-white rounded-2xl border border-warm-200 shadow-sm p-6 text-center reveal-card"
+                     id="stat-sales">
+                    <div class="font-serif text-4xl font-bold text-brand-700 leading-none">{{ $salesCount }}</div>
+                    <div class="text-xs text-warm-500 mt-2 uppercase tracking-widest font-semibold">Buku Terjual</div>
+                    <div class="mt-3 text-2xl opacity-30">📚</div>
+                </div>
+
+                {{-- Stat: Wishlist --}}
+                <div class="bg-white rounded-2xl border border-warm-200 shadow-sm p-6 text-center reveal-card"
+                     id="stat-wishlist">
+                    <div class="font-serif text-4xl font-bold text-brand-700 leading-none">{{ $wishlistCount }}</div>
+                    <div class="text-xs text-warm-500 mt-2 uppercase tracking-widest font-semibold">Wishlist</div>
+                    <div class="mt-3 text-2xl opacity-30">❤️</div>
+                </div>
+            </div>
+
+            {{-- ── HISTORY SECTION (2 kolom) ───────────────────────────── --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="history-grid">
+
+                {{-- ── RIWAYAT PEMBELIAN ───────────────────────────────── --}}
+                <div class="bg-white rounded-2xl border border-warm-200 shadow-sm overflow-hidden"
+                     id="purchase-history-card">
+                    <div class="px-6 py-4 border-b border-warm-100 bg-warm-50/50 flex justify-between items-center">
+                        <h3 class="font-bold text-warm-900 text-sm">Riwayat Pembelian</h3>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+                                     bg-warm-100 text-warm-700 border border-warm-200">
+                            {{ $purchaseCount }} total
+                        </span>
+                    </div>
+
+                    <div class="divide-y divide-warm-100">
+                        @forelse($purchaseHistory as $order)
+                            <div class="p-4 flex items-center gap-4 hover:bg-warm-50/50 transition"
+                                 id="purchase-row-{{ $order->order_id }}">
+                                {{-- Book icon --}}
+                                <div class="w-9 h-12 rounded bg-brand-50 border border-brand-100
+                                            flex items-center justify-center shrink-0 text-brand-600 text-sm">
+                                    📖
+                                </div>
+
+                                {{-- Info --}}
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-medium text-warm-900 truncate">
+                                        {{ $order->orderItems->first()?->book?->title ?? 'Pesanan #'.$order->order_id }}
+                                    </div>
+                                    <div class="text-xs text-warm-500 mt-0.5">
+                                        {{ $order->order_date?->format('d M Y') }}
+                                    </div>
+                                </div>
+
+                                {{-- Status & Review --}}
+                                <div class="flex flex-col items-end gap-1.5 shrink-0">
+                                    @php
+                                        $statusClasses = match($order->order_status) {
+                                            'completed' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                                            'pending'   => 'bg-amber-100 text-amber-800 border-amber-200',
+                                            'cancelled' => 'bg-red-100 text-red-700 border-red-200',
+                                            default     => 'bg-warm-100 text-warm-700 border-warm-200',
+                                        };
+                                    @endphp
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border {{ $statusClasses }}">
+                                        {{ ucfirst($order->order_status) }}
+                                    </span>
+                                    @if($order->order_status === 'completed' && !$order->review)
+                                        <a href="{{ route('crm.review.create', $order) }}"
+                                           class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-semibold
+                                                  bg-brand-50 text-brand-700 border border-brand-200
+                                                  hover:bg-brand-100 transition"
+                                           id="btn-review-{{ $order->order_id }}">
+                                            ⭐ Beri Ulasan
+                                        </a>
+                                    @elseif($order->review)
+                                        <span class="text-xs text-amber-600 font-semibold">
+                                            ★ {{ $order->review->rating }}/5
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-8 text-center" id="purchase-empty">
+                                <div class="text-3xl mb-2 opacity-30">🛒</div>
+                                <p class="text-sm text-warm-500">Belum ada pembelian</p>
+                                <a href="{{ route('books.index') }}"
+                                   class="inline-block mt-3 text-xs text-brand-700 font-semibold hover:underline">
+                                    Jelajahi Marketplace →
+                                </a>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                {{-- ── RIWAYAT PENJUALAN ───────────────────────────────── --}}
+                <div class="bg-white rounded-2xl border border-warm-200 shadow-sm overflow-hidden"
+                     id="sales-history-card">
+                    <div class="px-6 py-4 border-b border-warm-100 bg-warm-50/50 flex justify-between items-center">
+                        <h3 class="font-bold text-warm-900 text-sm">Riwayat Penjualan</h3>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+                                     bg-emerald-100 text-emerald-800 border border-emerald-200">
+                            {{ $salesCount }} terjual
+                        </span>
+                    </div>
+
+                    <div class="divide-y divide-warm-100">
+                        @forelse($salesHistory as $order)
+                            <div class="p-4 flex items-center gap-4 hover:bg-warm-50/50 transition"
+                                 id="sales-row-{{ $order->order_id }}">
+                                {{-- Book icon --}}
+                                <div class="w-9 h-12 rounded bg-emerald-50 border border-emerald-100
+                                            flex items-center justify-center shrink-0 text-emerald-600 text-sm">
+                                    📚
+                                </div>
+
+                                {{-- Info --}}
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-medium text-warm-900 truncate">
+                                        {{ $order->orderItems->first()?->book?->title ?? 'Pesanan #'.$order->order_id }}
+                                    </div>
+                                    <div class="text-xs text-warm-500 mt-0.5">
+                                        Pembeli: {{ $order->buyer?->name }}
+                                        &bull; {{ $order->order_date?->format('d M Y') }}
+                                    </div>
+                                </div>
+
+                                {{-- Status & Total --}}
+                                <div class="flex flex-col items-end gap-1.5 shrink-0">
+                                    @php
+                                        $statusClasses = match($order->order_status) {
+                                            'completed' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                                            'pending'   => 'bg-amber-100 text-amber-800 border-amber-200',
+                                            default     => 'bg-warm-100 text-warm-700 border-warm-200',
+                                        };
+                                    @endphp
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border {{ $statusClasses }}">
+                                        {{ ucfirst($order->order_status) }}
+                                    </span>
+                                    <span class="text-xs font-semibold text-warm-700">
+                                        Rp{{ number_format($order->total_amount, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-8 text-center" id="sales-empty">
+                                <div class="text-3xl mb-2 opacity-30">📚</div>
+                                <p class="text-sm text-warm-500">Belum ada penjualan</p>
+                                <a href="{{ route('books.create') }}"
+                                   class="inline-block mt-3 text-xs text-brand-700 font-semibold hover:underline">
+                                    Mulai Jual Buku →
+                                </a>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
-    {{-- Responsive fix for small screens --}}
-    <style>
-        @media (max-width: 700px) {
-            #history-grid { grid-template-columns: 1fr !important; }
-            #stats-row    { grid-template-columns: repeat(3, 1fr) !important; }
+    @push('scripts')
+    <script>
+        // Auto-dismiss flash alert
+        const alert = document.getElementById('crm-flash-alert');
+        if (alert) {
+            setTimeout(() => {
+                alert.style.transition = 'opacity 0.4s';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 400);
+            }, 4000);
         }
-    </style>
-
-</x-crm-layout>
+    </script>
+    @endpush
+</x-app-layout>

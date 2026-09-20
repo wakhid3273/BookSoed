@@ -1,69 +1,131 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Update Delivery Status') }} - Order #{{ $delivery->order_id }}
-        </h2>
-    </x-slot>
+    <div class="py-8">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    
-                    @if(session('status'))
-                        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                            <span class="block sm:inline">{{ session('status') }}</span>
-                        </div>
-                    @endif
+            {{-- ── HEADER ──────────────────────────────────────────────── --}}
+            <div>
+                <a href="{{ route('deliveries.show', $delivery->order_id) }}"
+                   class="back-btn mb-4 inline-flex">
+                    ← Kembali ke Tracking
+                </a>
+                <h1 class="font-serif text-2xl font-bold text-warm-900 mt-2">
+                    Update Status Pengiriman
+                </h1>
+                <p class="text-sm text-warm-500 mt-1">
+                    Order #{{ str_pad($delivery->order_id, 5, '0', STR_PAD_LEFT) }}
+                </p>
+            </div>
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Current Status</p>
-                        <p class="text-lg font-bold">{{ ucfirst(str_replace('_', ' ', $delivery->delivery_status)) }}</p>
-                    </div>
+            {{-- ── FLASH STATUS ────────────────────────────────────────── --}}
+            @if(session('status'))
+                <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium flex items-center gap-2"
+                     id="update-flash" role="alert">
+                    ✓ {{ session('status') }}
+                </div>
+            @endif
 
+            {{-- ── STATUS CARD ─────────────────────────────────────────── --}}
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-warm-100 bg-warm-50/50">
+                    <h2 class="font-bold text-warm-900 text-sm">Status Saat Ini</h2>
+                </div>
+
+                <div class="px-6 py-4">
+                    @php
+                        $currentStatus = $delivery->delivery_status;
+                        $statusClass = match($currentStatus) {
+                            'completed'   => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                            'delivered'   => 'bg-brand-50 text-brand-700 border-brand-200',
+                            'on_delivery', 'picked_up' => 'bg-blue-100 text-blue-800 border-blue-200',
+                            'assigned'    => 'bg-amber-100 text-amber-800 border-amber-200',
+                            'processing'  => 'bg-orange-100 text-orange-800 border-orange-200',
+                            default       => 'bg-warm-100 text-warm-700 border-warm-200',
+                        };
+                    @endphp
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border {{ $statusClass }}">
+                        {{ ucfirst(str_replace('_', ' ', $currentStatus)) }}
+                    </span>
+                </div>
+            </div>
+
+            {{-- ── UPDATE FORM ─────────────────────────────────────────── --}}
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-warm-100 bg-warm-50/50">
+                    <h2 class="font-bold text-warm-900 text-sm">Ubah Status ke</h2>
+                </div>
+
+                <div class="p-6">
                     @php
                         $statuses = [
-                            'pending',
-                            'processing',
-                            'assigned',
-                            'picked_up',
-                            'on_delivery',
-                            'delivered',
-                            'completed',
+                            'pending'     => 'Menunggu',
+                            'processing'  => 'Diproses',
+                            'assigned'    => 'Kurir Ditugaskan',
+                            'picked_up'   => 'Sudah Diambil',
+                            'on_delivery' => 'Dalam Pengiriman',
+                            'delivered'   => 'Terkirim',
+                            'completed'   => 'Selesai',
                         ];
-                        $currentIndex = array_search($delivery->delivery_status, $statuses);
-                        $allowedStatuses = array_slice($statuses, $currentIndex);
+                        $statusKeys    = array_keys($statuses);
+                        $currentIndex  = array_search($delivery->delivery_status, $statusKeys);
+                        $allowedKeys   = array_slice($statusKeys, $currentIndex);
                     @endphp
 
-                    <form method="POST" action="{{ route('deliveries.update-status', $delivery) }}">
+                    <form method="POST"
+                          action="{{ route('deliveries.update-status', $delivery) }}"
+                          id="update-status-form">
                         @csrf
                         @method('PATCH')
 
-                        <div class="mb-6">
-                            <label for="delivery_status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Update to:</label>
-                            <select id="delivery_status" name="delivery_status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600">
-                                @foreach($allowedStatuses as $status)
-                                    <option value="{{ $status }}" {{ $status === $delivery->delivery_status ? 'selected' : '' }}>
-                                        {{ ucfirst(str_replace('_', ' ', $status)) }}
+                        <div class="mb-6" id="status-select-section">
+                            <label for="delivery_status"
+                                   class="block text-xs font-semibold text-warm-700 uppercase tracking-widest mb-2">
+                                Status Baru
+                            </label>
+                            <select id="delivery_status"
+                                    name="delivery_status"
+                                    class="w-full bg-warm-50 border border-warm-200 rounded-xl px-4 py-2.5
+                                           text-sm text-warm-900
+                                           focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
+                                           transition">
+                                @foreach($allowedKeys as $statusKey)
+                                    <option value="{{ $statusKey }}"
+                                            {{ $statusKey === $delivery->delivery_status ? 'selected' : '' }}>
+                                        {{ $statuses[$statusKey] }}
                                     </option>
                                 @endforeach
                             </select>
                             @error('delivery_status')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <div class="flex items-center space-x-4">
-                            <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Save Status
+                        <div class="flex items-center gap-3">
+                            <button type="submit" class="btn-primary" id="btn-save-status">
+                                💾 Simpan Status
                             </button>
-                            <a href="{{ route('deliveries.show', $delivery->order_id) }}" class="text-sm font-medium text-gray-600 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300">
-                                Back to Tracking
+                            <a href="{{ route('deliveries.show', $delivery->order_id) }}"
+                               class="btn-secondary">
+                                Batal
                             </a>
                         </div>
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        // Auto-dismiss flash alert
+        const flash = document.getElementById('update-flash');
+        if (flash) {
+            setTimeout(() => {
+                flash.style.transition = 'opacity 0.4s';
+                flash.style.opacity = '0';
+                setTimeout(() => flash.remove(), 400);
+            }, 4000);
+        }
+    </script>
+    @endpush
 </x-app-layout>

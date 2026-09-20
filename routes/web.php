@@ -1,18 +1,18 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\DeliveryController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SellerOrderController;
 use Illuminate\Support\Facades\Route;
 
-// Halaman Utama Marketplace (CRM + ERP Home)
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Halaman Utama Marketplace (BookSoed Hero & Marketplace)
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
