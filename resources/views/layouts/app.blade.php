@@ -44,7 +44,7 @@
                 <div class="flex items-center gap-6 text-xs text-warm-400">
                     <a href="{{ route('books.index') }}" class="hover:text-white transition">Marketplace</a>
                     <a href="{{ route('books.create') }}" class="hover:text-white transition">Jual Buku</a>
-                    <span>ERP Module v1.0</span>
+                    <span>BookSoed Integrated v1.0</span>
                 </div>
             </div>
         </footer>

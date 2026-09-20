@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -67,7 +68,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ---------------------------------------------------------------
-// Buyer — Order management
+// Buyer — Order management (ERP)
 // ---------------------------------------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
@@ -75,6 +76,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+});
+
+// ---------------------------------------------------------------
+// SCM — Delivery / Fulfillment Management
+// ---------------------------------------------------------------
+Route::middleware('auth')->group(function () {
+    Route::get('/orders/{order}/delivery/create', [DeliveryController::class, 'create'])->name('deliveries.create');
+    Route::post('/orders/{order}/delivery', [DeliveryController::class, 'store'])->name('deliveries.store');
+    Route::get('/orders/{order}/delivery', [DeliveryController::class, 'show'])->name('deliveries.show');
+    Route::patch('/deliveries/{delivery}/status', [DeliveryController::class, 'updateStatus'])->name('deliveries.update-status');
 });
 
 // ---------------------------------------------------------------
@@ -89,7 +100,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ---------------------------------------------------------------
-// Seller — Incoming orders
+// Seller — Incoming orders (ERP)
 // ---------------------------------------------------------------
 Route::middleware('auth')->prefix('seller/orders')->name('seller.orders.')->group(function () {
     Route::get('/', [SellerOrderController::class, 'index'])->name('index');

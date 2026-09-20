@@ -7,12 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Book model — menggabungkan fungsionalitas ERP, SCM, dan CRM.
+ */
 class Book extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
+        'seller_id',
         'category_id',
         'title',
         'author',
@@ -20,8 +24,43 @@ class Book extends Model
         'condition',
         'price',
         'photo_path',
+        'photo_url',
+        'description',
         'status',
     ];
+
+    /**
+     * Alias getter untuk book_id agar kompatibel dengan SCM/CRM.
+     */
+    public function getBookIdAttribute()
+    {
+        return $this->attributes['id'] ?? null;
+    }
+
+    /**
+     * Alias getter untuk seller_id agar kompatibel dengan SCM/CRM.
+     */
+    public function getSellerIdAttribute()
+    {
+        return $this->attributes['seller_id'] ?? $this->attributes['user_id'] ?? null;
+    }
+
+    /**
+     * Alias setter untuk seller_id agar mengisi user_id bila diset.
+     */
+    public function setSellerIdAttribute($value): void
+    {
+        $this->attributes['seller_id'] = $value;
+        $this->attributes['user_id'] = $value;
+    }
+
+    /**
+     * Alias getter untuk photo_url agar kompatibel dengan views SCM.
+     */
+    public function getPhotoUrlAttribute()
+    {
+        return $this->attributes['photo_url'] ?? $this->attributes['photo_path'] ?? null;
+    }
 
     /**
      * Daftar kondisi buku yang valid.
@@ -62,15 +101,14 @@ class Book extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     /**
      * Get the order items where this book is listed.
-     * Used by BookPolicy to prevent deletion of books with transaction history.
      */
     public function orderItems(): HasMany
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'book_id');
     }
 }
