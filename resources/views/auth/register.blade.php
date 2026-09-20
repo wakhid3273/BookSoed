@@ -16,6 +16,15 @@
             <x-input-error :messages="$errors->get('name')" class="mt-1" />
         </div>
 
+        <!-- NIM / NIP -->
+        <div>
+            <label for="nim_nip" class="block text-xs font-semibold text-warm-800 mb-1">NIM / NIP</label>
+            <input id="nim_nip" type="text" name="nim_nip" :value="old('nim_nip')" required
+                   class="w-full bg-warm-50 border border-warm-200 rounded-xl px-3.5 py-2.5 text-sm text-warm-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition"
+                   placeholder="H1A021001" />
+            <x-input-error :messages="$errors->get('nim_nip')" class="mt-1" />
+        </div>
+
         <!-- Email Address -->
         <div>
             <label for="email" class="block text-xs font-semibold text-warm-800 mb-1">Alamat Email Kampus/Pribadi</label>
