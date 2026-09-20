@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -18,10 +19,24 @@ Route::get('/dashboard', function () {
 // ---------------------------------------------------------------
 // Admin area (ERP)
 // ---------------------------------------------------------------
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    // User monitoring
+    Route::get('/users', [AdminController::class, 'users'])->name('users.index');
+    Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
+
+    // Book/Listing monitoring
+    Route::get('/books', [AdminController::class, 'books'])->name('books.index');
+    Route::get('/books/{book}', [AdminController::class, 'showBook'])->name('books.show');
+
+    // Order monitoring
+    Route::get('/orders', [AdminController::class, 'orders'])->name('orders.index');
+    Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('orders.show');
+
+    // Payment monitoring
+    Route::get('/payments', [AdminController::class, 'payments'])->name('payments.index');
+    Route::get('/payments/{payment}', [AdminController::class, 'showPayment'])->name('payments.show');
 });
 
 // ---------------------------------------------------------------
