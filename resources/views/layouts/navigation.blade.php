@@ -34,6 +34,14 @@
                            class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('seller.orders.*') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
                             Pesanan Masuk
                         </a>
+                        <a href="{{ route('crm.wishlist') }}"
+                           class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('crm.wishlist') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
+                            ❤️ Wishlist (CRM)
+                        </a>
+                        <a href="{{ route('crm.dashboard') }}"
+                           class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('crm.dashboard') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
+                            👤 Profil Civitas (CRM)
+                        </a>
                         @if (Auth::user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}"
                                class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('admin.dashboard') ? 'bg-amber-100 text-amber-900 font-semibold' : 'text-amber-800 hover:bg-amber-50' }}">
@@ -67,6 +75,12 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                <x-dropdown-link :href="route('crm.dashboard')">
+                                    👤 Dashboard Civitas (CRM)
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('crm.wishlist')">
+                                    ❤️ Wishlist (CRM)
+                                </x-dropdown-link>
                                 <x-dropdown-link :href="route('profile.edit')">
                                     ⚙️ Pengaturan Profil
                                 </x-dropdown-link>
@@ -124,6 +138,12 @@
             </a>
             <a href="{{ route('seller.orders.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('seller.orders.*') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
                 📬 Pesanan Masuk
+            </a>
+            <a href="{{ route('crm.wishlist') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('crm.wishlist') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
+                ❤️ Wishlist (CRM)
+            </a>
+            <a href="{{ route('crm.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('crm.dashboard') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
+                👤 Profil Civitas (CRM)
             </a>
             @if (Auth::user()->role === 'admin')
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium bg-amber-100 text-amber-900">

@@ -12,15 +12,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('wishlists', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id')->cascadeOnDelete();
-            $table->unsignedBigInteger('book_id');
-            $table->foreign('book_id')->references('book_id')->on('books')->cascadeOnDelete();
-            $table->timestamp('created_at')->useCurrent();
+        if (!Schema::hasTable('wishlists')) {
+            Schema::create('wishlists', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+                $table->foreignId('book_id')->constrained('books')->cascadeOnDelete();
+                $table->timestamp('created_at')->useCurrent();
 
-            $table->unique(['user_id', 'book_id']);
-        });
+                $table->unique(['user_id', 'book_id']);
+            });
+        }
     }
 
     public function down(): void

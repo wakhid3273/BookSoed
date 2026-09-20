@@ -13,16 +13,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->id('review_id');
-            $table->unsignedBigInteger('order_id')->unique();
-            $table->foreign('order_id')->references('order_id')->on('orders')->cascadeOnDelete();
-            $table->foreignId('buyer_id')->constrained('users', 'id')->cascadeOnDelete();
-            $table->foreignId('seller_id')->constrained('users', 'id')->cascadeOnDelete();
-            $table->unsignedTinyInteger('rating');
-            $table->text('comment')->nullable();
-            $table->timestamp('created_at')->useCurrent();
-        });
+        if (!Schema::hasTable('reviews')) {
+            Schema::create('reviews', function (Blueprint $table) {
+                $table->id('review_id');
+                $table->foreignId('order_id')->unique()->constrained('orders')->cascadeOnDelete();
+                $table->foreignId('buyer_id')->constrained('users', 'id')->cascadeOnDelete();
+                $table->foreignId('seller_id')->constrained('users', 'id')->cascadeOnDelete();
+                $table->unsignedTinyInteger('rating');
+                $table->text('comment')->nullable();
+                $table->timestamp('created_at')->useCurrent();
+            });
+        }
     }
 
     public function down(): void
