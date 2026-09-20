@@ -30,6 +30,7 @@ return new class extends Migration
                 $table->string('condition'); // e.g. Sangat Baik, Baik, Cukup
                 $table->decimal('price', 12, 2);
                 $table->string('photo_path')->nullable();
+                $table->text('description')->nullable();
                 $table->string('status')->default('AVAILABLE'); // AVAILABLE, RESERVED, SOLD
                 $table->timestamps();
             });
