@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        $books = Book::where('status', 'available')
+        $books = Book::whereIn('status', ['AVAILABLE', 'available'])
             ->with(['seller', 'category'])
             ->latest('created_at')
             ->paginate(12);
