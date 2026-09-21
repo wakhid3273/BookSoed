@@ -36,16 +36,18 @@
                         </a>
                         <a href="{{ route('crm.wishlist') }}"
                            class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('crm.wishlist') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
-                            ❤️ Wishlist (CRM)
+                            Wishlist
                         </a>
+                        @if (!(Auth::user()->role === 'admin'))
                         <a href="{{ route('crm.dashboard') }}"
                            class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('crm.dashboard') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-warm-800 hover:text-brand-700 hover:bg-warm-100' }}">
-                            👤 Profil Civitas (CRM)
+                            Profil Civitas
                         </a>
+                        @endif
                         @if (Auth::user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}"
                                class="px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('admin.dashboard') ? 'bg-amber-100 text-amber-900 font-semibold' : 'text-amber-800 hover:bg-amber-50' }}">
-                                🛡️ Admin ERP
+                                Admin ERP
                             </a>
                         @endif
                     @endauth
@@ -75,14 +77,16 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                @if (!(Auth::user()->role === 'admin'))
                                 <x-dropdown-link :href="route('crm.dashboard')">
-                                    👤 Dashboard Civitas (CRM)
+                                    Dashboard Civitas
                                 </x-dropdown-link>
+                                @endif
                                 <x-dropdown-link :href="route('crm.wishlist')">
-                                    ❤️ Wishlist (CRM)
+                                    Wishlist
                                 </x-dropdown-link>
                                 <x-dropdown-link :href="route('profile.edit')">
-                                    ⚙️ Pengaturan Profil
+                                    Pengaturan Profil
                                 </x-dropdown-link>
 
                                 <form method="POST" action="{{ route('logout') }}">
@@ -90,7 +94,7 @@
                                     <x-dropdown-link :href="route('logout')"
                                             onclick="event.preventDefault(); this.closest('form').submit();"
                                             class="text-red-600 hover:bg-red-50">
-                                        🚪 Log Out
+                                        Log Out
                                     </x-dropdown-link>
                                 </form>
                             </x-slot>
@@ -126,28 +130,28 @@
     <!-- Responsive Mobile Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-warm-50 border-t border-warm-200 px-4 pt-3 pb-4 space-y-2">
         <a href="{{ route('books.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('books.index') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
-            📖 Marketplace Buku
+            Marketplace Buku
         </a>
 
         @auth
             <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('orders.*') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
-                📦 Order Saya
+                Order Saya
             </a>
             <a href="{{ route('books.my-listings') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('books.my-listings') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
-                📚 Listing Saya
+                Listing Saya
             </a>
             <a href="{{ route('seller.orders.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('seller.orders.*') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
-                📬 Pesanan Masuk
+                Pesanan Masuk
             </a>
             <a href="{{ route('crm.wishlist') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('crm.wishlist') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
-                ❤️ Wishlist (CRM)
+                Wishlist
             </a>
             <a href="{{ route('crm.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('crm.dashboard') ? 'bg-brand-100 text-brand-800' : 'text-warm-800' }}">
-                👤 Profil Civitas (CRM)
+                Profil Civitas
             </a>
             @if (Auth::user()->role === 'admin')
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium bg-amber-100 text-amber-900">
-                    🛡️ Admin ERP
+                    Admin ERP
                 </a>
             @endif
 
