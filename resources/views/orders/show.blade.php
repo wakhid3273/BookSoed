@@ -107,6 +107,32 @@
                 </div>
             </div>
 
+            {{-- SCM Delivery & Jeksoed --}}
+            <div class="bg-white rounded-2xl border border-warm-200 shadow-xs p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h3 class="font-bold text-warm-900 text-sm">Pengiriman Buku</h3>
+                        @if ($order->delivery)
+                            <p class="text-xs text-warm-500 mt-1">
+                                Metode: <span class="font-semibold uppercase">{{ $order->delivery->delivery_method }}</span>
+                            </p>
+                        @else
+                            <p class="text-xs text-warm-500 mt-1">Pilih COD atau gunakan layanan antar Jeksoed.</p>
+                        @endif
+                    </div>
+
+                    @if ($order->delivery)
+                        <a href="{{ route('deliveries.show', $order) }}" class="btn-sm-primary text-xs px-5 py-2.5">
+                            📦 Lacak Pengiriman
+                        </a>
+                    @elseif (auth()->id() === $order->buyer_id && $order->status !== 'CANCELLED')
+                        <a href="{{ route('deliveries.create', $order) }}" class="btn-sm-primary text-xs px-5 py-2.5">
+                            🚚 Atur Pengiriman Jeksoed
+                        </a>
+                    @endif
+                </div>
+            </div>
+
             {{-- Cancel Order Action --}}
             @if ($order->status === 'PENDING' && auth()->id() === $order->buyer_id)
                 <div class="pt-2 flex justify-end">

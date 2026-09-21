@@ -91,18 +91,18 @@ class OrderController extends Controller
                 $sellerId = $sellerIds->first();
 
                 // 5. Hitung total
-                $subtotal   = $books->sum('price');
+                $subtotal = $books->sum('price');
                 $serviceFee = Order::SERVICE_FEE;
-                $total      = $subtotal + $serviceFee;
+                $total = $subtotal + $serviceFee;
 
                 // 6. Buat Order
                 $order = Order::create([
-                    'buyer_id'     => $buyerId,
-                    'seller_id'    => $sellerId,
-                    'order_date'   => now(),
-                    'status'       => 'PENDING',
-                    'subtotal'     => $subtotal,
-                    'service_fee'  => $serviceFee,
+                    'buyer_id' => $buyerId,
+                    'seller_id' => $sellerId,
+                    'order_date' => now(),
+                    'status' => 'PENDING',
+                    'subtotal' => $subtotal,
+                    'service_fee' => $serviceFee,
                     'total_amount' => $total,
                 ]);
 
@@ -110,8 +110,8 @@ class OrderController extends Controller
                 foreach ($books as $book) {
                     OrderItem::create([
                         'order_id' => $order->id,
-                        'book_id'  => $book->id,
-                        'price'    => $book->price,
+                        'book_id' => $book->id,
+                        'price' => $book->price,
                         'quantity' => 1,
                     ]);
 
@@ -137,7 +137,7 @@ class OrderController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order->load(['seller', 'buyer', 'items.book.category', 'payment']);
+        $order->load(['seller', 'buyer', 'items.book.category', 'payment', 'delivery']);
 
         return view('orders.show', compact('order'));
     }

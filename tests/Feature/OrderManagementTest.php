@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class OrderManagementTest extends TestCase
@@ -27,17 +28,17 @@ class OrderManagementTest extends TestCase
     private function makeBook(User $seller, array $overrides = []): Book
     {
         return Book::create(array_merge([
-            'user_id'     => $seller->id,
+            'user_id' => $seller->id,
             'category_id' => $this->category()->id,
-            'title'       => 'Buku Test ' . rand(1, 9999),
-            'author'      => 'Penulis',
-            'condition'   => 'GOOD',
-            'price'       => 20000,
-            'status'      => 'AVAILABLE',
+            'title' => 'Buku Test '.rand(1, 9999),
+            'author' => 'Penulis',
+            'condition' => 'GOOD',
+            'price' => 20000,
+            'status' => 'AVAILABLE',
         ], $overrides));
     }
 
-    private function placeOrder(User $buyer, array $bookIds): \Illuminate\Testing\TestResponse
+    private function placeOrder(User $buyer, array $bookIds): TestResponse
     {
         return $this->actingAs($buyer)->post(route('orders.store'), [
             'book_ids' => $bookIds,
@@ -47,9 +48,9 @@ class OrderManagementTest extends TestCase
     // 1. Buyer dapat membuat Order dari Book AVAILABLE
     public function test_buyer_can_create_order_from_available_book(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller, ['price' => 20000]);
+        $book = $this->makeBook($seller, ['price' => 20000]);
 
         $response = $this->placeOrder($buyer, [$book->id]);
 
@@ -73,9 +74,9 @@ class OrderManagementTest extends TestCase
     // 3. Book RESERVED tidak dapat dipesan lagi
     public function test_reserved_book_cannot_be_ordered(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller, ['status' => 'RESERVED']);
+        $book = $this->makeBook($seller, ['status' => 'RESERVED']);
 
         $response = $this->placeOrder($buyer, [$book->id]);
 
@@ -86,9 +87,9 @@ class OrderManagementTest extends TestCase
     // 4. Book SOLD tidak dapat dipesan
     public function test_sold_book_cannot_be_ordered(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller, ['status' => 'SOLD']);
+        $book = $this->makeBook($seller, ['status' => 'SOLD']);
 
         $response = $this->placeOrder($buyer, [$book->id]);
 
@@ -99,11 +100,11 @@ class OrderManagementTest extends TestCase
     // 5. Order hanya boleh memiliki satu seller
     public function test_order_cannot_contain_books_from_multiple_sellers(): void
     {
-        $buyer   = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller1 = $this->makeUser();
         $seller2 = $this->makeUser();
-        $book1   = $this->makeBook($seller1);
-        $book2   = $this->makeBook($seller2);
+        $book1 = $this->makeBook($seller1);
+        $book2 = $this->makeBook($seller2);
 
         $response = $this->placeOrder($buyer, [$book1->id, $book2->id]);
 
@@ -114,9 +115,9 @@ class OrderManagementTest extends TestCase
     // 6. OrderItem menyimpan harga transaksi (snapshot)
     public function test_order_item_stores_price_at_time_of_transaction(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller, ['price' => 45000]);
+        $book = $this->makeBook($seller, ['price' => 45000]);
 
         $this->placeOrder($buyer, [$book->id]);
 
@@ -133,10 +134,10 @@ class OrderManagementTest extends TestCase
     // 7. Subtotal dihitung dengan benar
     public function test_subtotal_is_correctly_calculated(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book1  = $this->makeBook($seller, ['price' => 20000]);
-        $book2  = $this->makeBook($seller, ['price' => 15000]);
+        $book1 = $this->makeBook($seller, ['price' => 20000]);
+        $book2 = $this->makeBook($seller, ['price' => 15000]);
 
         $this->placeOrder($buyer, [$book1->id, $book2->id]);
 
@@ -147,9 +148,9 @@ class OrderManagementTest extends TestCase
     // 8. Service fee dihitung dengan benar (Rp1.000)
     public function test_service_fee_is_correctly_applied(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller, ['price' => 20000]);
+        $book = $this->makeBook($seller, ['price' => 20000]);
 
         $this->placeOrder($buyer, [$book->id]);
 
@@ -160,9 +161,9 @@ class OrderManagementTest extends TestCase
     // 9. Total amount = subtotal + service_fee
     public function test_total_amount_equals_subtotal_plus_service_fee(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller, ['price' => 20000]);
+        $book = $this->makeBook($seller, ['price' => 20000]);
 
         $this->placeOrder($buyer, [$book->id]);
 
@@ -174,9 +175,9 @@ class OrderManagementTest extends TestCase
     // 10. Book berubah menjadi RESERVED setelah Order dibuat
     public function test_book_becomes_reserved_after_order(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller);
+        $book = $this->makeBook($seller);
 
         $this->placeOrder($buyer, [$book->id]);
 
@@ -189,7 +190,7 @@ class OrderManagementTest extends TestCase
         $buyer1 = $this->makeUser();
         $buyer2 = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller);
+        $book = $this->makeBook($seller);
 
         $this->placeOrder($buyer1, [$book->id]);
         $order = Order::first();
@@ -201,10 +202,10 @@ class OrderManagementTest extends TestCase
     // 12. Seller tidak dapat melihat Order seller lain
     public function test_seller_cannot_view_other_sellers_order(): void
     {
-        $buyer   = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller1 = $this->makeUser();
         $seller2 = $this->makeUser();
-        $book    = $this->makeBook($seller1);
+        $book = $this->makeBook($seller1);
 
         $this->placeOrder($buyer, [$book->id]);
         $order = Order::first();
@@ -216,9 +217,9 @@ class OrderManagementTest extends TestCase
     // 13. Order PENDING dapat dibatalkan oleh buyer
     public function test_buyer_can_cancel_pending_order(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller);
+        $book = $this->makeBook($seller);
 
         $this->placeOrder($buyer, [$book->id]);
         $order = Order::first();
@@ -232,9 +233,9 @@ class OrderManagementTest extends TestCase
     // 14. Saat Order dibatalkan, Book kembali AVAILABLE
     public function test_book_returns_to_available_when_order_cancelled(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller);
+        $book = $this->makeBook($seller);
 
         $this->placeOrder($buyer, [$book->id]);
         $order = Order::first();
@@ -262,7 +263,7 @@ class OrderManagementTest extends TestCase
     // 16. Seller dapat melihat order miliknya di seller index
     public function test_seller_can_view_own_incoming_orders(): void
     {
-        $buyer   = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller1 = $this->makeUser();
         $seller2 = $this->makeUser();
 
@@ -282,9 +283,9 @@ class OrderManagementTest extends TestCase
     // 17. Seller dapat memproses order PENDING menjadi PROCESSING
     public function test_seller_can_process_pending_order(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller);
+        $book = $this->makeBook($seller);
 
         $this->placeOrder($buyer, [$book->id]);
         $order = Order::first();
@@ -298,9 +299,9 @@ class OrderManagementTest extends TestCase
     // 18. Seller tidak dapat memproses order yang sudah PROCESSING, COMPLETED, atau CANCELLED
     public function test_seller_cannot_process_non_pending_order(): void
     {
-        $buyer  = $this->makeUser();
+        $buyer = $this->makeUser();
         $seller = $this->makeUser();
-        $book   = $this->makeBook($seller);
+        $book = $this->makeBook($seller);
 
         $this->placeOrder($buyer, [$book->id]);
         $order = Order::first();
@@ -308,5 +309,45 @@ class OrderManagementTest extends TestCase
 
         $response = $this->actingAs($seller)->post(route('seller.orders.process', $order));
         $response->assertStatus(403);
+    }
+
+    // 19. Detail Order menyediakan akses ke pengaturan pengiriman Jeksoed
+    public function test_buyer_can_access_delivery_setup_from_order_detail(): void
+    {
+        $buyer = $this->makeUser();
+        $seller = $this->makeUser();
+        $book = $this->makeBook($seller);
+
+        $this->placeOrder($buyer, [$book->id]);
+        $order = Order::first();
+
+        $response = $this->actingAs($buyer)->get(route('orders.show', $order));
+
+        $response->assertOk();
+        $response->assertSee(route('deliveries.create', $order));
+        $response->assertSee('Atur Pengiriman Jeksoed');
+    }
+
+    // 20. Detail Order menyediakan akses tracking setelah pengiriman dibuat
+    public function test_buyer_can_access_delivery_tracking_from_order_detail(): void
+    {
+        $buyer = $this->makeUser();
+        $seller = $this->makeUser();
+        $book = $this->makeBook($seller);
+
+        $this->placeOrder($buyer, [$book->id]);
+        $order = Order::first();
+
+        $this->actingAs($buyer)->post(route('deliveries.store', $order), [
+            'delivery_method' => 'jeksoed',
+            'pickup_location' => 'Gedung A',
+            'destination' => 'Asrama Putri',
+        ]);
+
+        $response = $this->actingAs($buyer)->get(route('orders.show', $order));
+
+        $response->assertOk();
+        $response->assertSee(route('deliveries.show', $order));
+        $response->assertSee('Lacak Pengiriman');
     }
 }
